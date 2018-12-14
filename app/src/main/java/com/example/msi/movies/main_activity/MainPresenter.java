@@ -7,7 +7,6 @@ import com.example.msi.movies.main_activity.adapter.MoviesAdapter;
 import com.example.msi.movies.model.Movie;
 import com.example.msi.movies.model.MovieRepository;
 import com.example.msi.movies.model.MovieSummary;
-import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -48,11 +47,18 @@ public class MainPresenter implements MainContract.MainPresenter, MovieRepositor
             return 3;
     }
 
+    @Override
+    public void clearCache() {
+        movieRepo.clearAllTables();
+    }
 
     /* ------- RecyclerView Adapter  -------  */
     @Override
     public void onClickRecyclerItem(View v, int position) {
-        mView.startMovieActivity(movieCatalog.get(position).getId());
+        if (mView.isNetworkConnected() || movieRepo.isStored(movieCatalog.get(position).getId()))
+            mView.startMovieActivity(movieCatalog.get(position).getId());
+        else
+            mView.displayToast("No internet connection.");
     }
 
     @Override

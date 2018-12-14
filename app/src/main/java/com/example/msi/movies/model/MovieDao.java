@@ -1,6 +1,7 @@
 package com.example.msi.movies.model;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
@@ -18,4 +19,5 @@ public interface MovieDao {
 
     @Update
     void update(Movie movie);
+
 }

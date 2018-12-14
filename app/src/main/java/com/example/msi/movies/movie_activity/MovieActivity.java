@@ -109,6 +109,12 @@ public class MovieActivity extends AppCompatActivity implements MovieContract.Mo
                         finish();
                     }
                 })
+                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        finish();
+                    }
+                })
                 .show();
         mProgressBar.setVisibility(View.GONE);
     }

@@ -109,4 +109,14 @@ public class MovieRepository {
         });
 
     }
+
+    public void clearAllTables(){
+        appDatabase.clearAllTables();
+        Log.i(TAG, "cleared tables");
+    }
+
+    public boolean isStored(String id){
+        Movie movie = appDatabase.movieDao().getMovieById(id);
+        return (movie != null);
+    }
 }

@@ -1,15 +1,17 @@
 package com.example.msi.movies.main_activity;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -19,6 +21,8 @@ import com.example.msi.movies.R;
 import com.example.msi.movies.main_activity.adapter.ItemOffsetDecoration;
 import com.example.msi.movies.main_activity.adapter.MoviesAdapter;
 import com.example.msi.movies.movie_activity.MovieActivity;
+
+import java.net.InetAddress;
 
 
 public class MainActivity extends AppCompatActivity implements MainContract.MainView {
@@ -57,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         // Toolbar
         getSupportActionBar().setTitle("Token Movies");
 
-
         // Bind Views
         mProgBar = findViewById(R.id.progress_bar);
         mRecyclerView = findViewById(R.id.movie_list);
@@ -65,13 +68,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         mImageError = findViewById(R.id.img_error);
 
         // Recycler View
-        mMovieAdapter = new MoviesAdapter(mPresenter);
-        mRecyclerView.setAdapter(mMovieAdapter);
         int columnsNumber = mPresenter.getRecyclerColumnsNumber();
         mLayoutManager = new GridLayoutManager(this, columnsNumber);
         mRecyclerView.setLayoutManager(mLayoutManager);
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.item_offset);
         mRecyclerView.addItemDecoration(itemDecoration);
+        mMovieAdapter = new MoviesAdapter(mPresenter);
+        mRecyclerView.setAdapter(mMovieAdapter);
 
         // Disable Swipe Up
         mSwipeLayout.setRefreshing(false);
@@ -160,5 +163,30 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         super.onResume();
         mLayoutManager.scrollToPosition(currentVisiblePosition);
         currentVisiblePosition = 0;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_delete, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_clear:
+                mPresenter.clearCache();
+                return true;
+
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 }

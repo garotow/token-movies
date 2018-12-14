@@ -19,6 +19,7 @@ public interface MainContract {
         void disableSwipeUp();
         void notifyDataChange();
         boolean isPortrait();
+        boolean isNetworkConnected();
         Context getAppContext();
 
     }
@@ -32,6 +33,7 @@ public interface MainContract {
         void onBindMovieAtPosition(int position, MoviesAdapter.MovieHolder holder);
         int getMoviesCount();
         int getRecyclerColumnsNumber();
+        void clearCache();
 
 
     }
